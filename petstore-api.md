@@ -33,6 +33,19 @@
   "status": "sold"
 }
 ```
+### Response fields description
+
+| Field | Type | Описание |
+|-------|------|----------|
+| id | integer | The unique identifier of the pet |
+| category | object | Pet's category information object |
+| category.id | integer | Category ID |
+| category.name | string | Category name (e.g, "cat", "dog") |
+| name | string | Pet's name |
+| photoUrls | array | List of photo URLs (may be empty) |
+| tags | array | Tags list(each with id and name) |
+| status | string | Pet status: available, pending or sold |
+
 ## Endpoint: Find pets by status
 
 **URL:**(https://petstore.swagger.io/v2/pet/findByStatus)
@@ -43,7 +56,7 @@
 
 ### Query parameters
 
-| Parameter | Type | Status |Description |
+| Parameter | Type | Required |Description |
 |-----------|------|--------|------------------------|
 | status | string | Yes | Status of pets to return. Available values: `available`, `pending`, `sold`.|
 
@@ -131,4 +144,118 @@ The tags array contains objects with:
 |-------|-------------|
 | 200 | Successful request |
 | 400	| Invalid status value |
+
+## Endpoint: Add a new pet to the store
+
+**URL:** {{base_url}}/pet
+
+**Method:** POST
+
+**Description:** Adds a new pet to the store.The request body must contain the pet data in JSON format.
+
+### Request Headers
+
+| Header | Value | Description |
+|--------|-------|-------------|
+| `Content-Type` | `application/json` | Indicates that the request body is JSON. |
+
+### Request Body Scheme
+
+The request body must be a JSON object with the following structure:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | integer | Yes | Unique identifier for the pet. |
+| `category` | object | Yes | An object containing the pet's category. |
+| `category.id` | integer | Yes | Category ID. |
+| `category.name` | string | Yes | Category name (e.g., `"cats"`, `"dogs"`). |
+| `name` | string | Yes | Pet's name. |
+| `photoUrls` | array | Yes | Array of photo URLs (can be empty). |
+| `tags` | array | Yes | Array of tag objects. Each tag has `id` and `name`. |
+| `tags[].id` | integer | Yes | Tag ID. |
+| `tags[].name` | string | Yes | Tag name. |
+| `status` | string | Yes | Pet status in the store: `available`, `pending`, or `sold`. |
+
+### Request example
+
+```json
+{
+  "id": 123456789,
+  "category": {
+    "id": 1,
+    "name": "cats"
+  },
+  "name": "Barsik",
+  "photoUrls": [
+    "https://example.com/photo/barsik.jpg"
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "name": "fluffy"
+    }
+  ],
+  "status": "available"
+}
+```
+
+You can also use this cURL command to test the endpoint:
+
+```bash
+curl -X POST "{{base_url}}/pet" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 123456789,
+    "category": {
+      "id": 1,
+      "name": "cats"
+    },
+    "name": "Barsik",
+    "photoUrls": [
+      "https://example.com/photo/barsik.jpg"
+    ],
+    "tags": [
+      {
+        "id": 1,
+        "name": "fluffy"
+      }
+    ],
+    "status": "available"
+  }'
+  ```
+
+  ### Response example (successful, code 200)
+
+  If the pet is successfully created, the server returns the created pet object (usually the same as the request body, possibly with additional fields):
+
+  ```
+  {
+  "id": 123456789,
+  "category": {
+    "id": 1,
+    "name": "cats"
+  },
+  "name": "Barsik",
+  "photoUrls": [
+    "https://example.com/photo/barsik.jpg"
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "name": "fluffy"
+    }
+  ],
+  "status": "available"
+}
+```
+### Response fields
+
+The response has the same structure as the request body (see the table above). Optionally, the server might include additional fields like *createdAt*, but in Petstore it's not present.
+
+### Response codes
+
+| Code | Description |
+|------|-------------|
+| 200 | Pet successfully created. |
+| 405 | Invalid input (e.g., missing required field, wrong data type). |
 

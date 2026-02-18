@@ -19,6 +19,7 @@ This repository contains the samples of documentation for public API [Petstore](
 * 'petstore-api.md' - the main file with endpoints' documentation
 * `GET /pet/{petId}` — receiving the pet by ID.
 * `GET /pet/findByStatus` — pet searching by status.
+* `POST /pet` — add a new pet to the store
 
 ## Application
 
