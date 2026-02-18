@@ -10,9 +10,9 @@
 
 ### Request parameters
 
-| Parameter | Type    | Required | Description                    |
-|-----------|---------|----------|--------------------------------|
-| petId     | integer | Yes      | ID of the pet (e.g., 1)        |
+| Parameter | Type    | Required | Description |
+|-----------|---------|------------------------|
+| pet Id | integer | Yes | ID of the pet (e.g., 1) |
 
 ### Request example
 
