@@ -11,8 +11,8 @@
 ### Request parameters
 
 | Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| pet Id | integer | Yes | ID of the pet (e.g., 1) |
+|:---------:|:----:|:--------:|:-----------:|
+| pet ID | integer | Yes | ID of the pet (e.g., 1) |
 
 ### Request example
 
