@@ -259,3 +259,149 @@ The response has the same structure as the request body (see the table above). O
 | 200 | Pet successfully created. |
 | 405 | Invalid input (e.g., missing required field, wrong data type). |
 
+## Endpoint: Update an existing pet
+
+**URL:** `{{base_url}}/pet`
+
+**Method:** `PUT`
+
+**Description:** Updates an existing pet. If the pet with the specified ID does not exist, it may be created (depending on the API implementation). Requires the full pet object.
+
+### Request Headers
+
+| Header | Value | Description |
+|--------|-------|-------------|
+| `Content-Type` | `application/json` | Indicates that the request body is JSON. |
+
+### Request Body Scheme
+
+Same as for `POST /pet` (see the table above). All fields are optional in the sense that you can update only some, but it's safer to send the complete object.
+
+### Request Example
+
+```json
+{
+  "id": 123456789,
+  "category": {
+    "id": 1,
+    "name": "cats"
+  },
+  "name": "Barsik Updated",
+  "photoUrls": [
+    "https://example.com/photo/barsik_new.jpg"
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "name": "fluffy"
+    },
+    {
+      "id": 2,
+      "name": "lazy"
+    }
+  ],
+  "status": "sold"
+}
+```
+### cURL Command
+
+```
+curl -X PUT "{{base_url}}/pet" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 123456789,
+    "category": {
+      "id": 1,
+      "name": "cats"
+    },
+    "name": "Barsik Updated",
+    "photoUrls": [
+      "https://example.com/photo/barsik_new.jpg"
+    ],
+    "tags": [
+      {
+        "id": 1,
+        "name": "fluffy"
+      },
+      {
+        "id": 2,
+        "name": "lazy"
+      }
+    ],
+    "status": "sold"
+  }'
+  ```
+
+  ### Response Example (successful,code 200)
+
+The server returns the updated pet object:
+
+ ```
+  {
+  "id": 123456789,
+  "category": {
+    "id": 1,
+    "name": "cats"
+  },
+  "name": "Barsik Updated",
+  "photoUrls": [
+    "https://example.com/photo/barsik_new.jpg"
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "name": "fluffy"
+    },
+    {
+      "id": 2,
+      "name": "lazy"
+    }
+  ],
+  "status": "sold"
+}
+```
+
+### Response Codes
+
+| Code | Description |
+|------|-------------|
+| 200 | Pet successfully updated |
+| 400 | Invalid input(e.g., malformed JSON) |
+| 404 | Pet not found (if API doesn't create automatically). |
+| 405 | Method not allowed |
+
+## Endpoint: Delete a pet
+
+**URL:** `{{base_url}}/pet/{petID}`
+
+**Method:** `DELETE`
+
+**Description:** Deletes a pet by its ID.
+
+### Path Parameters
+
+| Parameter | Type    | Required | Description |
+|-----------|---------|----------|-------------|
+| petId | integer | Yes | ID of the pet to delete. |
+
+### Request Example
+
+`DELETE {{base_url}}/pet/1`
+
+### cURL Command
+
+```bash
+curl -X DELETE "{{base_url}}/pet/1"
+```
+
+### Response Example (successful, code 200)
+
+The server usually returns an empty response body. Sometimes it may return a confirmation message like in the response below
+
+```json
+{
+    "code": 200,
+    "type": "unknown",
+    "message": "1"
+}
+```
