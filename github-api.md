@@ -10,6 +10,8 @@ GitHub API allows you to programmatically get data about users, repositories, co
   * [GET /users/{username} — Get user information](#get-usersusername--get-user-information)
   * [GET /users/{username}/repos — Get user repositories](#get-usersusernamerepos--get-user-repositories)
   * [GET /repos/{owner}/{repo}/commits — Get repository commits](#get-reposownerrepocommits--get-repository-commits)
+  * [GET /users/{username}/starred — Get repositories starred by a user](#get-usersusernamestarred--get-repositories-starred-by-a-user)
+  * [POST /repos/{owner}/{repo}/issues — Create an issue](#post-reposownerrepoissues--create-an-issue)
 
 ## Base URL and Authorization
 
@@ -580,3 +582,245 @@ curl -L \
 | 404 | Not found — repository doesn't exist |
 | 410 | Gone — issues are disabled for this repository |
 | 422 | Unprocessable Entity — validation failed |
+
+### PATCH /repos/{owner}/{repo} — Update a repository
+
+**URL:** `https://api.github.com/repos/{owner}/{repo}`
+
+**Method:** `PATCH`
+
+**Description:** Updates the settings or properties of a specified repository. You can change the name, description, visibility, archive status, and many other options.
+
+#### Path Parameters
+
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `owner` | string | Yes | The account owner of the repository |
+| `repo` | string | Yes | The name of the repository |
+
+#### Headers
+
+| Header | Value | Required | Description |
+|--------|-------|----------|-------------|
+| `Accept` | `application/vnd.github+json` | Yes | Tells GitHub to send the response in JSON format [citation:1][citation:4]. |
+| `Authorization` | `Bearer YOUR_TOKEN` | **Yes** | Token for authentication. Without it, you cannot update a repository |
+| `Content-Type` | `application/json` | Yes | Indicates that the request body is JSON |
+
+#### Request Body Schema
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | No | Changing of the repository name |
+| `description` | string | No | Brief description of the repository |
+| `homepage` | string | No | A URL with more information about the repository |
+| `private` | boolean | No | Either `true` to make the repository private or `false` to make it public. Default: `false` |
+| `visibility` | string | No | The visibility of the repository |
+| `default_branch` | string | No | Updates the default branch for this repository (for example from `master` to `main`) |
+| `archived` | boolean | No | Whether to archive this repository. `false` will unarchive a previously archived repository |
+| `has_issues` | boolean | No | Either `true` to enable issues for this repository or `false` to disable them |
+| `has_wiki` | boolean | No | Either `true` to enable the wiki for this repository or `false` to disable it |
+| `allow_merge_commit` | boolean | No | Either `true` to allow merging pull requests with a merge commit, or `false` to prevent merging pull requests with merge commits |
+| `delete_branch_on_merge` | boolean | No | Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion |
+
+#### Request Body Example
+
+```json
+{
+  "description": "This is my awesome test repository updated via API",
+  "homepage": "https://github.com/alivieskan25-blip/test-issues"
+}
+```
+
+#### cURL Command
+
+```bash
+curl -L -X PATCH \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  https://api.github.com/repos/alivieskan25-blip/test-issues \
+  -d '{"description": "Updated via API", "homepage": "https://github.com/alivieskan25-blip/test-issues"}'
+```
+
+#### Response Example (successful, code 200)
+
+```json
+{
+  "id": 1167654025,
+  "name": "test-issues",
+  "full_name": "alivieskan25-blip/test-issues",
+  "private": false,
+  "description": "Repository for test requests",
+  "html_url": "https://github.com/alivieskan25-blip/test-issues",
+  "created_at": "2026-02-26T14:35:13Z",
+  "updated_at": "2026-03-06T18:25:24Z",
+  "has_issues": true,
+  "has_wiki": true,
+  "archived": false,
+  "visibility": "public",
+  "default_branch": "main",
+  "permissions": {
+    "admin": true,
+    "push": true,
+    "pull": true
+  }
+}
+```
+#### Response Fields Descriprion
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | integer | Unique repository identifier |
+| `name` | string | Repository name |
+| `private` | boolean | Whether repository is private |
+| `description` | string | Repository description |
+| `html_url` | string | URL to the repository on GitHub |
+| `created_at` | string | Repository creation date |
+| `updated_at` | string | Last update date |
+| `has_issues` | boolean | Whether issues are enabled |
+| `has_wiki` | boolean | Whether wiki is enabled |
+| `visibility` | string | Repository visibility: "public" or "private" |
+| `default_branch` | string | Default branch name |
+| `permissions` | object | Current user's permissions |
+| `permissions.admin` | boolean | Whether user can admin the repo |
+| `permissions.push` | boolean | Whether user can push to the repo |
+| `permissions.pull` | boolean | Whether user can pull from the repo |
+
+#### Response Codes
+
+| Code | Description |
+|------|-------------|
+| 200 | Successful request.Repository is updated |
+| 307 | Temporary redirect |
+| 403 | 	Forbidden. You don't have permission to update this repository or an invalid token was provided |
+| 404 | Not Found. The repository or owner does not exist |
+| 422 | Unprocessable Entity. Validation failed (e.g., trying to change to an invalid name) |
+
+### GET /repos/{owner}/{repo}/pulls - Lists pull requests in a specified repository
+
+**URL:** `https://api.github.com/repos/{owner}/{repo}/pulls`
+
+**Method:** `GET`
+
+**Description:** Lists pull requests in a specified repository.
+
+#### Path Parameters
+
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `owner` | string | Yes | The account owner of the repository |
+| `repo` | string | Yes | The name of the repository |
+
+#### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `state` | string | No | Either open, closed, or all to filter by state |
+| `head` | string | No | Filter by branch in `user:ref-name` format |
+| `base` | string | No | Filter pulls by base branch name. Example: `gh-pages` |
+| `sort` | string | No | What to sort results by |
+| `direction` | string | No | The direction of the sort. Default: `desc` when sort is created or `sort` is not specified, otherwise `asc` |
+| `per_page` | integer | No | The number of results per page (max 100) |
+| `page` | integer | No | The page number of the results to fetch |
+
+#### Request examples
+
+`GET https://api.github.com/repos/octocat/Hello-World/pulls` - Lists all open pull-requests(base request)
+
+`GET https://api.github.com/repos/octocat/Hello-World/pulls?state=closed&sort=updated&direction=desc` - Lists closed requests sorted by update date
+
+`GET https://api.github.com/repos/octocat/Hello-World/pulls?head=octocat:feature-branch` - Filters by specified branch
+
+#### Headers
+
+| Header | Value | Required | Description |
+|--------|-------|----------|-------------|
+| `Accept` | `application/vnd.github+json` | Yes | Response format |
+| `Authorization` | `Bearer YOUR_TOKEN` | No | Authentication token |
+
+#### cURL Command
+
+```bash
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer <YOUR-TOKEN>" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/OWNER/REPO/pulls
+```
+
+#### Response Example (successful, code 200)
+
+```json
+[
+  {
+    "url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347",
+    "id": 1,
+    "number": 1347,
+    "state": "open",
+    "title": "Amazing new feature",
+    "user": {
+      "login": "octocat",
+      "id": 1,
+      "avatar_url": "https://github.com/images/error/octocat_happy.gif"
+    },
+    "body": "Please pull these awesome changes in!",
+    "created_at": "2011-01-26T19:01:12Z",
+    "updated_at": "2011-01-26T19:01:12Z",
+    "closed_at": null,
+    "merged_at": null,
+    "merge_commit_sha": "e5bd3914e2e596de",
+    "head": {
+      "label": "octocat:new-feature",
+      "ref": "new-feature",
+      "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e"
+    },
+    "base": {
+      "label": "octocat:main",
+      "ref": "main",
+      "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e"
+    },
+    "draft": false,
+    "merged": false,
+    "mergeable": true,
+    "comments": 10,
+    "commits": 3,
+    "additions": 100,
+    "deletions": 3,
+    "changed_files": 5
+  }
+]
+```
+
+#### Response Fields Description
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | integer | Pull-request unique identifier |
+| `number` | integer | Pull-request number in the repository |
+| `state` | string | Whether is `open` or `closed` |
+| `title` | string | Header |
+| `body` | string | Description |
+| `user` | object | Pull-request author |
+| `created_at` | string | Creation date |
+| `updated_at` | string | Last update |
+| `closed_at` | string | Closing date (null, if open) |
+| `merged_at` | string | Merge date (null, if not merged) |
+| `head` | object | Source-branch of changes |
+| `head.ref` | string | Source-branch name |
+| `head.sha` | string | SHA of last commit |
+| `draft` | boolean | Pull-request draft |
+| `merged` | boolean | Whether is merged |
+| `mergeable` | boolean | Can be it merged |
+| `comments` | integer | Comments number |
+| `commits` | integer | Commits number |
+| `additions` | integer | Number of strings added |
+| `deletions` | integer | Number of strings deleted |
+| `changed_files` | integer | Number of changed files |
+
+#### Response Codes
+
+| Code | Description |
+|------|-------------|
+| 200 | Successful request |
+| 304 | Not modified |
+| 422 | Validation failed, or the endpoint has been spammed |

@@ -8,7 +8,7 @@
 ![REST API](https://img.shields.io/badge/REST_API-005571?style=for-the-badge&logo=swagger&logoColor=white)
 
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
-![Version](https://img.shields.io/badge/Version-1.1.0-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-1.2.0-blue?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
 This repository contains samples of API documentation created for learning and portfolio purposes. It demonstrates technical writing skills for REST APIs using modern tools and best practices.
@@ -28,7 +28,7 @@ This repository includes documentation samples for two different APIs:
 * **[Petstore API](https://petstore.swagger.io)** — a popular learning API that demonstrates all CRUD operations. Perfect for understanding basic REST concepts.
 * **[GitHub REST API](https://docs.github.com/en/rest)** — a real-world API used by millions of developers. All examples are tested with real requests (using my own repositories and tokens).
 
-The goal is to show the ability to document various types of endpoints, work with different data structures, and handle both simple and complex API scenarios.
+The goal is to show the ability to document various types of endpoints, work with different data structures, and handle both simple and complex API scenarios. The collection now includes endpoints for retrieving data, creating resources, updating repositories, and listing pull requests.
 
 ## 📂 Documentation Structure
 
@@ -55,11 +55,17 @@ Documentation for the real GitHub REST API. All examples are tested with live da
 | `GET /users/{username}/repos` | List public repositories for a user |
 | `GET /repos/{owner}/{repo}/commits` | List commits in a repository |
 | `GET /users/{username}/starred` | List repositories starred by a user |
+| `GET /repos/{owner}/{repo}/pulls` | List pull requests in a repository |
 
 #### POST endpoints (creating data):
 | Endpoint | Description |
 |----------|-------------|
 | `POST /repos/{owner}/{repo}/issues` | Create a new issue in a repository (tested on my own repo) |
+
+#### PATCH endpoints (updating data):
+| Endpoint | Description |
+|----------|-------------|
+| `PATCH /repos/{owner}/{repo}` | Update repository settings (name, description, visibility, etc.) |
 
 ## 🛠 Technology Stack
 
@@ -81,11 +87,11 @@ Learning API documentation and technical writing.
 ## 🚀 What's Next
 
 I'm continuously improving my skills. Planned additions:
-- Add OpenAPI/Swagger specifications
-- Document more complex GitHub endpoints (search, pagination)
+- Add OpenAPI/Swagger specifications for documented endpoints
+- Document more complex GitHub endpoints (search API, organization endpoints)
 - Create documentation for a public API in Spanish
-- Write a blog post about transitioning from linguistics to tech writing
+- Write a blog post about transitioning from linguistics to technical writing
 
 ---
 
-*Last updated: February 2026*
+*Last updated: March 2026*
